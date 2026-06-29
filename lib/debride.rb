@@ -176,6 +176,10 @@ class Debride < MethodBasedSexpProcessor
         option[:parser] = RubyParser
       end
 
+      opts.on("--encoding ENC", String, "Force template file encoding (default: utf-8)") do |enc|
+        options[:encoding] = enc
+      end
+
       opts.on("-v", "--verbose", "Verbose. Show progress processing files.") do
         options[:verbose] = true
       end
@@ -269,8 +273,8 @@ class Debride < MethodBasedSexpProcessor
       # s(:call, nil, :alias_method_chain, s(:lit, :royale), s(:lit, :cheese))
       _, _, _, (_, new_name), _ = sexp
       if option[:rails] then
-        file, line = sexp.file, sexp.line
-        record_method new_name, file, line
+        file, line, line_max = sexp.file, sexp.line, sexp.line_max
+        record_method new_name, file, line, line_max
       end
     when :attr_accessor then
       # s(:call, nil, :attr_accessor, s(:lit, :a1), ...)
